@@ -1,28 +1,27 @@
-from flask import Flask, render_template, request
+import streamlit as st
 import pickle
 
-# Load model and vectorizer
+# Load saved model and vectorizer
 model = pickle.load(open("model.pkl", "rb"))
 vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 
-# Initialize Flask app
-app = Flask(__name__)
+# Streamlit app
+st.title("AI vs Human Writing Detector")
+st.write("This app predicts whether the given text is AI-generated or Human-written.")
 
-# Home route -> show form
-@app.route("/")
-def home():
-    return render_template("index.html")
+# Text input
+user_input = st.text_area("Enter your text here:")
 
-# Prediction route -> handle form submission
-@app.route("/predict", methods=["POST"])
-def predict():
-    if request.method == "POST":
-        text = request.form["text"]  # get text from form
-        text_vectorized = vectorizer.transform([text])  # transform input
-        prediction = model.predict(text_vectorized)[0]  # make prediction
+if st.button("Predict"):
+    if user_input.strip() != "":
+        # Preprocess and predict
+        features = vectorizer.transform([user_input])
+        prediction = model.predict(features)[0]
 
-        result = "AI Generated" if prediction == 1 else "Human Written"
-        return render_template("index.html", result=result)
+        if prediction == 1:
+            st.success("🤖 The text is AI Generated.")
+        else:
+            st.success("🧑 The text is Human Written.")
+    else:
+        st.warning("Please enter some text before predicting.")
 
-if __name__ == "__main__":
-    app.run(debug=True)
