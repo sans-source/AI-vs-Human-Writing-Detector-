@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI vs Human Writing Detector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #333;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 60%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+
+    input[type="submit"] {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <h2>AI vs Human Writing Detector</h2>
+
+  <form action="/predict" method="post">
+    <!-- Keep entered text after reload -->
+    <textarea name="text" placeholder="Enter your text here...">{% if request.form.get('text') %}{{ request.form.get('text') }}{% endif %}</textarea><br>
+    <input type="submit" value="Check">
+  </form>
+
+  <!-- Show result if available -->
+  {% if result %}
+    <div class="result">
+      <p>Prediction: {{ result }}</p>
+    </div>
+  {% endif %}
+</body>
+</html>
